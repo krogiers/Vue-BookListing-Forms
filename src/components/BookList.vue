@@ -15,7 +15,7 @@
         <book-item v-for='book in filteredBooks' :key='book.id' :book='book'></book-item>
       </ul>
     </div>
-    
+
     <br><hr>
     <book-form @addBook='appendBook'></book-form>
   </div>
@@ -42,6 +42,7 @@ export default {
       searchInput: ""
     };
   },
+  
   components: {
     BookItem,
     BookForm
