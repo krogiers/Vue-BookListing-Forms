@@ -1,8 +1,9 @@
 <template>
   <div>
     <h1>{{title}}</h1>
+    <input type="text" v-model="searchInput" placeholder="Search Books"/>
     <ul>
-      <book-item v-for='book in books' :key='book.id' :book='book'></book-item>
+      <book-item v-for="book in searchedBooks" :key='book.id' :book='book'></book-item>
     </ul>
     <hr>
     <div>
@@ -14,6 +15,7 @@
         <book-item v-for='book in filteredBooks' :key='book.id' :book='book'></book-item>
       </ul>
     </div>
+
     <br><hr>
     <book-form @addBook='appendBook'></book-form>
   </div>
@@ -35,9 +37,11 @@ export default {
         { title: "Amusing Ourselves to Death", author: "Neil Postman", finishedReading: true,  ownership:"borrowed" }
       ],
       filters: ["bought", "borrowed"],
-      holding: "bought"
+      holding: "bought",
+      searchInput: ""
     };
   },
+  
   components: {
     BookItem,
     BookForm
@@ -45,16 +49,23 @@ export default {
   computed: {
     filteredBooks() {
       return _.filter(this.books, ["ownership", this.holding])
+    },
+    searchedBooks() {
+      const searchFilter = book => {
+        console.log ("in de functie")
+        return book.title.toLowerCase().match(this.searchInput.toLowerCase());
+      };
+      return _.filter(this.books, searchFilter);
     }
   },
   methods: {
     appendBook(bookData) {
       this.books.push(
-        { 
-          title: bookData.bookTitle, 
-          author: bookData.bookAuthor, 
+        {
+          title: bookData.bookTitle,
+          author: bookData.bookAuthor,
           finishedReading: bookData.finishedReading,
-          ownership : bookData.ownership 
+          ownership : bookData.ownership
         });
     }
   }
